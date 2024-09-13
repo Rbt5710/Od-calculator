@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interest Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab {
+      margin: 0 15px;
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+    }
+    .tab.active {
+      background-color: #007BFF;
+      color: #fff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Interest Calculator</h2>
+
+    <div class="tabs">
+      <div class="tab active" id="yearly-tab">Yearly Calculation</div>
+      <div class="tab" id="monthly-tab">Monthly Calculation</div>
+    </div>
+
+    <!-- Yearly Tab Content -->
+    <div class="tab-content active" id="yearly-content">
+      <div class="form-group">
+        <label for="principal-year">Principal Amount</label>
+        <input type="number" id="principal-year" placeholder="Enter principal amount">
+      </div>
+      <div class="form-group">
+        <label for="rate-year">Interest Rate (%)</label>
+        <input type="number" id="rate-year" placeholder="Enter interest rate">
+      </div>
+      <div class="form-group">
+        <label for="time-year">Time (Years)</label>
+        <input type="number" id="time-year" placeholder="Enter time in years">
+      </div>
+      <div class="form-group">
+        <label for="fee-year">Processing Fee (%)</label>
+        <input type="number" id="fee-year" placeholder="Enter processing fee rate">
+      </div>
+      <button onclick="calculateYearly()">Calculate</button>
+      <div class="result" id="result-yearly"></div>
+    </div>
+
+    <!-- Monthly Tab Content -->
+    <div class="tab-content" id="monthly-content">
+      <div class="form-group">
+        <label for="principal-month">Principal Amount</label>
+        <input type="number" id="principal-month" placeholder="Enter principal amount">
+      </div>
+      <div class="form-group">
+        <label for="rate-month">Interest Rate (%)</label>
+        <input type="number" id="rate-month" placeholder="Enter interest rate">
+      </div>
+      <div class="form-group">
+        <label for="time-month">Time (Months)</label>
+        <input type="number" id="time-month" placeholder="Enter time in months">
+      </div>
+      <div class="form-group">
+        <label for="fee-month">Processing Fee (%)</label>
+        <input type="number" id="fee-month" placeholder="Enter processing fee rate">
+      </div>
+      <button onclick="calculateMonthly()">Calculate</button>
+      <div class="result" id="result-monthly"></div>
+    </div>
+  </div>
+
+  <script>
+    // Switching between tabs
+    const yearlyTab = document.getElementById('yearly-tab');
+    const monthlyTab = document.getElementById('monthly-tab');
+    const yearlyContent = document.getElementById('yearly-content');
+    const monthlyContent = document.getElementById('monthly-content');
+
+    yearlyTab.addEventListener('click', () => {
+      yearlyTab.classList.add('active');
+      monthlyTab.classList.remove('active');
+      yearlyContent.classList.add('active');
+      monthlyContent.classList.remove('active');
+    });
+
+    monthlyTab.addEventListener('click', () => {
+      monthlyTab.classList.add('active');
+      yearlyTab.classList.remove('active');
+      monthlyContent.classList.add('active');
+      yearlyContent.classList.remove('active');
+    });
+
+    // Simple Interest Calculation Function
+    function simpleInterest(principal, rate, time) {
+      return (principal * rate * time) / 100;
+    }
+
+    // Processing Fee Calculation Function
+    function processingFee(principal, feeRate, time) {
+      return (principal * feeRate * time) / 100;
+    }
+
+    // Yearly Calculation
+    function calculateYearly() {
+      const principal = parseFloat(document.getElementById('principal-year').value);
+      const rate = parseFloat(document.getElementById('rate-year').value);
+      const time = parseFloat(document.getElementById('time-year').value);
+      const feeRate = parseFloat(document.getElementById('fee-year').value);
+
+      const interest = simpleInterest(principal, rate, time);
+      const fees = processingFee(principal, feeRate, time);
+
+      document.getElementById('result-yearly').innerHTML = `
+        Total Interest: ${interest.toFixed(2)}<br>
+        Yearly Interest: ${(interest / time).toFixed(2)}<br>
+        Monthly Interest: ${(interest / (time * 12)).toFixed(2)}<br>
+        Total Processing Fees: ${fees.toFixed(2)}
+      `;
+    }
+
+    // Monthly Calculation
+    function calculateMonthly() {
+      const principal = parseFloat(document.getElementById('principal-month').value);
+      const rate = parseFloat(document.getElementById('rate-month').value);
+      const time = parseFloat(document.getElementById('time-month').value) / 12; // Convert months to years
+      const feeRate = parseFloat(document.getElementById('fee-month').value);
+
+      const interest = simpleInterest(principal, rate, time);
+      const fees = processingFee(principal, feeRate, time);
+
+      document.getElementById('result-monthly').innerHTML = `
+        Total Interest: ${interest.toFixed(2)}<br>
+        Monthly Interest: ${(interest / (time * 12)).toFixed(2)}<br>
+        Total Processing Fees: ${fees.toFixed(2)}
+      `;
+    }
+  </script>
+</body>
+</html>
